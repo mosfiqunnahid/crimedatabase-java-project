@@ -1,9 +1,18 @@
+
+import crime.MySQLConnect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Mrinmoy
@@ -61,6 +70,17 @@ public class newcase extends javax.swing.JFrame {
         });
 
         save_newcase.setText("Save ");
+        save_newcase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                save_newcaseActionPerformed(evt);
+            }
+        });
+
+        new_casedate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                new_casedateActionPerformed(evt);
+            }
+        });
 
         jLabel6.setText("Date :");
 
@@ -76,11 +96,11 @@ public class newcase extends javax.swing.JFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 10, Short.MAX_VALUE)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(victim_description)
                     .addComponent(victim_name)
@@ -150,6 +170,49 @@ public class newcase extends javax.swing.JFrame {
     private void victim_criminalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_victim_criminalActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_victim_criminalActionPerformed
+
+    private void save_newcaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_save_newcaseActionPerformed
+        try {
+            //start connection
+            Connection conn = MySQLConnect.connectDB();
+
+            String Victim_Name = victim_name.getText();
+            String Victim_NID = victim_NID.getText();
+            String Case_Description = victim_description.getText();
+            String Criminal_Name = victim_criminal.getText();
+            String Case_Date = new_casedate.getText();
+
+            String query = "INSERT INTO caselist (name_of_victim, nid_number, description, criminal_name, date) VALUES (?, ?, ?, ?, ?)";
+
+            PreparedStatement prepareStmt;
+            prepareStmt = conn.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+            prepareStmt.setString(1, Victim_Name);
+            prepareStmt.setString(2, Victim_NID);
+            prepareStmt.setString(3, Case_Description);
+            prepareStmt.setString(4, Criminal_Name);
+            prepareStmt.setString(5, Case_Date);
+
+            prepareStmt.execute();
+
+            ResultSet rs = prepareStmt.getGeneratedKeys();
+            
+            if (rs.next()) {
+                int last_inserted_id = rs.getInt(1);
+            }
+            
+            int caseID= rs.getInt(1);
+            JOptionPane.showMessageDialog(null, "New Case Recorded: Case ID # " + caseID);
+
+            System.out.println("Case Recorded " + rs.getInt(1));
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(newcase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_save_newcaseActionPerformed
+
+    private void new_casedateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new_casedateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_new_casedateActionPerformed
 
     /**
      * @param args the command line arguments
