@@ -50,6 +50,10 @@ public class newcase extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(100, 100));
+        setName("newcaseFrame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(725, 536));
+        setResizable(false);
 
         jLabel1.setBackground(new java.awt.Color(102, 153, 255));
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
