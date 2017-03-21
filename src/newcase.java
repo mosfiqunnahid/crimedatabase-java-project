@@ -195,13 +195,18 @@ public class newcase extends javax.swing.JFrame {
             prepareStmt.execute();
 
             ResultSet rs = prepareStmt.getGeneratedKeys();
-            
+
             if (rs.next()) {
                 int last_inserted_id = rs.getInt(1);
             }
+
+            int caseID = rs.getInt(1);
+
+            int input = JOptionPane.showOptionDialog(null, "New Case Recorded: Case ID # " + caseID, "New Crime Case Saved", JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
             
-            int caseID= rs.getInt(1);
-            JOptionPane.showMessageDialog(null, "New Case Recorded: Case ID # " + caseID);
+            if (input == JOptionPane.OK_OPTION) {
+                System.out.println("OK Pressed");
+            }
 
             System.out.println("Case Recorded " + rs.getInt(1));
             conn.close();
